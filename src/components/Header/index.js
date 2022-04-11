@@ -13,7 +13,7 @@ return (
 
         <TouchableOpacity onPress={onPress}>
             <LinearGradient style={styles.boxIcon}
-                colors={['#0072ff', '#00c6ff',]}
+                colors={['#8000FF', '#0072ff', ]}
                 start={{ x: 0.0, y: 0.25 }} end={{ x: 0.5, y: 1.0 }}
             >
                 <Image source={LogOutIcon} style={styles.gearIcon} />
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     boxIcon: {
         width: 40,
         height: 40,
-        borderRadius: 20,
+        borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center'
     },

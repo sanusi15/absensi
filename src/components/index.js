@@ -6,4 +6,4 @@ import JadwalMk from "./JadwalMk";
 import BottomSheet from "./BottomSheet";
 import Header from "./Header"
 
-export {List, CustomInput, CustomButton, ButtonAbsen, JadwalMk, BottomSheet, Header};
+export {List, CustomInput, CustomButton, ButtonAbsen, JadwalMk, BottomSheet, Header,};

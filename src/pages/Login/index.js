@@ -1,22 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
+import url from '../../routes/url';
 import { StyleSheet, StatusBar, useWindowDimensions, View, Modal, Image, ScrollView, Alert, TextInput, Text} from 'react-native';
 import { Logo } from '../../../assets'
-import {CustomButton} from '../../components'
+import {CustomButton,} from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Login = ({ navigation }) => {
-    
     const [nim, setNim] = useState('');
     const [username, setUsername] = useState('');
     const [alertAwsome,  setAlertAwesome] = useState(false);
     const { height } = useWindowDimensions();
-    
     const onSignIn = async () => {         
         // post data
-        await Axios.get('http://192.168.1.8:8011/golkar/api.php?op=mhsLogin&nim='+nim+'&username='+username)            
+        await Axios.get(url+'golkar/api.php?op=mhsLogin&nim='+nim+'&username='+username)            
         .then((json) => {
             const mahasiswa = json.data.data
             // console.log(mahasiswa.namamahasiswa)
@@ -41,30 +40,28 @@ const Login = ({ navigation }) => {
             }
         })      
     }
-
     const closeAlert = () => {
         setAlertAwesome(false)
         console.log(() => alertAwsome());
     }
-    
     useEffect(()  => {
         cekLogin()
     }, [])
-
     const cekLogin = async () => {
         try {
             const DataStorage = await AsyncStorage.getItem('dataStorage')
             if (DataStorage) {
-                // console.log(DataStorage)
+                console.log(DataStorage)
                 navigation.replace('Home')
+            } else {
+                // navigation.replace('Login')                            
+                console.log('Tidak ada data storage')
             }
-            
         }catch (e){
             console.log('Gagal login otomatis')
             navigation.replace('Login')            
         }
     }
-
     return (
         <LinearGradient
             colors={[ '#8000FF', '#00FFFF', ]}        
@@ -81,25 +78,24 @@ const Login = ({ navigation }) => {
                 <CustomButton text="Sign In" onPress={onSignIn} />
                 <CustomButton text="Silahkan Masukan NIM dan Password Anda" type="TERTIARY" />
 
-                <AwesomeAlert
-                    show={alertAwsome}
-                    // showProgress={() => setAwsomeAlert(true)}
-                    title="Peringatan!"
-                    message="Username atau NIM anda tidak sesuai."
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={true}
-                    showConfirmButton={true}
-                    confirmText="Tutup"
-                    confirmButtonColor="#DD6B55"
-                    confirmButtonStyle={
-                        width='100%'
-                    }
-                    onConfirmPressed={() => closeAlert()}
-
-                />
+            <AwesomeAlert
+                show={alertAwsome}
+                // showProgress={() => setAwsomeAlert(true)}
+                title="Peringatan!"
+                message="Username atau NIM anda tidak sesuai."
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={true}
+                showConfirmButton={true}
+                confirmText="Tutup"
+                confirmButtonColor="#DD6B55"
+                confirmButtonStyle={
+                    width='100%'
+                }
+                onConfirmPressed={() => closeAlert()}
+            />
             </View>    
         </ScrollView>   
-        </LinearGradient>        
+        </LinearGradient>
     );
 };
 
@@ -143,7 +139,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        // width: '50%'
     },
     modalView2: {
         margin: 20,
