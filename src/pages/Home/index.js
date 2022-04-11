@@ -1,23 +1,22 @@
-import { Text, View, StyleSheet, TouchableOpacity, ImageBackground} from 'react-native'
+import { Text, View, StyleSheet, ImageBackground } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import { Bg } from '../../../assets'
 import Axios from 'axios'
 import url from '../../routes/url'
-import { BottomSheet, ButtonAbsen, Header } from '../../components'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { BottomSheet, ButtonAbsen, Header,} from '../../components'
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 
 const Home = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [username, setUsername] = useState('');
   const [kelas, setKelas] = useState('');
   const [mkNow,  setMkNow] = useState('')
   useEffect(() => {
     cekLogin()
-    getData()
+    getMK()
   }, [])
   const cekLogin = async () => {
       try {
@@ -32,7 +31,7 @@ const Home = () => {
           navigation.replace('Login')            
       }
   }
-  const getData = async () => {
+  const getMK = async () => {
     try {
       const value = await AsyncStorage.getItem('dataStorage')      
       if (value !== null) {
@@ -46,12 +45,14 @@ const Home = () => {
         var hari = myDays[tglIND.getDay()]
         try {
           await Axios.get(url+'golkar/api.php?op=mkSekarang&hari='+hari+'&kelas='+user.kelas)
-              .then((res) => {
-                  console.log('Hqasilnya adalah : ',res.data.data.hasil)                 
-                  setMkNow(res.data.data.hasil)
+              .then((res) => {                  
+                const hasil = res.data.data.hasil
+                console.log(hasil)                                 
+                setMkNow(res.data.data.hasil)
               })
         } catch (e) {
-            console.log('asdae', e)
+            setMkNow('Tidak Ada Perkuliahan')
+            console.log('tidak ada perkuliahan', e)
         }
       }
     } catch(e) {
@@ -68,23 +69,25 @@ const Home = () => {
       console.log('gagal logout')
     }
   }
-  return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ImageBackground source={ Bg} resizeMode="cover" style={styles.image}>
-        <Header nama={username} onPress={() => LogOut() }/>
-      <ButtonAbsen />
-      <View style={styles.contWarn}>
-        <Text style={styles.warning}>Silahkan Tekan Tombol di Atas Untuk Melakukan Absensi</Text>
-      </View>                
-      <View style={styles.contMkNow}>
-        <LinearGradient style={styles.contNow} colors={['#f83600', '#fe8c00',]}>
-          <Text style={styles.now}>Sekarang</Text>
-        </LinearGradient>
-          <Text style={styles.mkNow}>{mkNow}</Text>
-        </View>
-        <BottomSheet kelasMhs={ kelas }/>
-      </ImageBackground>
-    </GestureHandlerRootView>
+
+
+  return (    
+    <View style={{ flex: 1 }}>      
+        <ImageBackground source={ Bg} resizeMode="cover" style={styles.image}>
+        <Header nama={username} onPress={() => LogOut()} />
+            <ButtonAbsen  />
+            <View style={styles.contWarn}>
+              <Text style={styles.warning}>Silahkan Tekan Tombol di Atas Untuk Melakukan Absensi</Text>
+            </View>                
+            <View style={styles.contMkNow}>
+              <LinearGradient style={styles.contNow} colors={['#f83600', '#fe8c00',]}>
+                <Text style={styles.now}>Sekarang</Text>
+              </LinearGradient>
+                <Text style={styles.mkNow}>{mkNow}</Text>
+            </View>
+            <BottomSheet kelasMhs={ kelas }/>
+        </ImageBackground>      
+    </View>
   )
 }
 export default Home

@@ -24,10 +24,10 @@ const BottomSheet = () => {
                 var myDays = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
                 var hari = myDays[tglIND.getDay()]                
                 try {
-                    await Axios.get(url + 'golkar/api.php?op=jadwalMk&hari=' + hari + '&kelas=' + user.kelas)
+                    await Axios.get(url + 'golkar/api.php?op=jadwalMk&hari='+hari+'&kelas=' + user.kelas)
                         .then((response) => setJadwal(response.data.data.hasil))
                 } catch (e) {
-                    console.log('Gagal get API')
+                    console.log('Gagaal get API')
                 }
             }
         } catch (e) {
@@ -71,7 +71,7 @@ const BottomSheet = () => {
 
     return (
       
-            <View  style={styles.container}>
+        <View style={styles.container}>
             <SwipeUpDown
                 itemMini={(hide) => <ItemMini show={hide} />}
                 itemFull={(hide) => <ItemFull show={hide} value={jadwal} />}
@@ -82,9 +82,9 @@ const BottomSheet = () => {
                 extraMarginTop={50}
                 iconColor='#00c6ff'
                 iconSize={30}
-                style={{ backgroundColor: '#8000FF', padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
+                style={{ backgroundColor: '#4f43cc', padding: 20, borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
                 />
-            </View>
+        </View>
     )
 }
 

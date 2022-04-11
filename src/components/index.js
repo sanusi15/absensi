@@ -5,5 +5,6 @@ import ButtonAbsen from "./ButtonAbsen";
 import JadwalMk from "./JadwalMk";
 import BottomSheet from "./BottomSheet";
 import Header from "./Header"
+import AlertView from "./AlertView"
 
-export {List, CustomInput, CustomButton, ButtonAbsen, JadwalMk, BottomSheet, Header,};
+export {List, CustomInput, CustomButton, ButtonAbsen, JadwalMk, BottomSheet, Header, AlertView};

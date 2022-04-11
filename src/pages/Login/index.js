@@ -3,24 +3,23 @@ import Axios from 'axios';
 import url from '../../routes/url';
 import { StyleSheet, StatusBar, useWindowDimensions, View, Modal, Image, ScrollView, Alert, TextInput, Text} from 'react-native';
 import { Logo } from '../../../assets'
-import {CustomButton,} from '../../components'
+import {CustomButton, AlertView} from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
-import AwesomeAlert from 'react-native-awesome-alerts';
-
+import { Error2 } from '../../../assets'
 const Login = ({ navigation }) => {
     const [nim, setNim] = useState('');
     const [username, setUsername] = useState('');
-    const [alertAwsome,  setAlertAwesome] = useState(false);
+    const [alertLottie,  setAlertLottie] = useState(false);
     const { height } = useWindowDimensions();
     const onSignIn = async () => {         
         // post data
         await Axios.get(url+'golkar/api.php?op=mhsLogin&nim='+nim+'&username='+username)            
         .then((json) => {
             const mahasiswa = json.data.data
-            // console.log(mahasiswa.namamahasiswa)
+            console.log(mahasiswa.namamahasiswa)
             if (json.data.data == false || json.data.data == null){
-                setAlertAwesome(true)
+                setAlertLottie(true)
             } else {
                 let data = {
                     username: mahasiswa.namamahasiswa,
@@ -40,10 +39,6 @@ const Login = ({ navigation }) => {
             }
         })      
     }
-    const closeAlert = () => {
-        setAlertAwesome(false)
-        console.log(() => alertAwsome());
-    }
     useEffect(()  => {
         cekLogin()
     }, [])
@@ -58,7 +53,7 @@ const Login = ({ navigation }) => {
                 console.log('Tidak ada data storage')
             }
         }catch (e){
-            console.log('Gagal login otomatis')
+            console.log('Gagal login otomats')
             navigation.replace('Login')            
         }
     }
@@ -71,28 +66,15 @@ const Login = ({ navigation }) => {
             <StatusBar hidden={true} />
             <View style={styles.root}>
                 <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' />
+                <AlertView jsonPath={Error2} btnCollor="#cf4c4c" title="Error" message="NIM atau Username Tidak Sesuai" visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)}></AlertView>
 
                 <TextInput style={styles.txtInput} placeholder="Masukan Username Anda" onChangeText={(value) => setUsername(value)} value={username} />
                 <TextInput style={styles.txtInput} placeholder="Masukan NIM Anda" onChangeText={(value) => setNim(value)} value={nim}/>
 
                 <CustomButton text="Sign In" onPress={onSignIn} />
                 <CustomButton text="Silahkan Masukan NIM dan Password Anda" type="TERTIARY" />
+                
 
-            <AwesomeAlert
-                show={alertAwsome}
-                // showProgress={() => setAwsomeAlert(true)}
-                title="Peringatan!"
-                message="Username atau NIM anda tidak sesuai."
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={true}
-                showConfirmButton={true}
-                confirmText="Tutup"
-                confirmButtonColor="#DD6B55"
-                confirmButtonStyle={
-                    width='100%'
-                }
-                onConfirmPressed={() => closeAlert()}
-            />
             </View>    
         </ScrollView>   
         </LinearGradient>

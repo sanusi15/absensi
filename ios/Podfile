@@ -20,6 +20,8 @@ target 'Absensi' do
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
+  pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
+
   target 'AbsensiTests' do
     inherit! :complete
     # Pods for testing
