@@ -31,7 +31,7 @@ const BottomSheet = () => {
                 }
             }
         } catch (e) {
-            console.log('Gagal Menampilkan Jadwal MK')
+            console.log('Gagalll Menampilkan Jadwal MK')
         }
     }
     const ItemMini = () => {
