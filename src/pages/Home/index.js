@@ -1,9 +1,9 @@
-import { Text, View, StyleSheet, ImageBackground } from 'react-native'
+import { Text, View, StyleSheet, ImageBackground, StatusBar } from 'react-native'
 import React, {useEffect, useState} from 'react'
-import { Bg } from '../../../assets'
+import { Bg, Bg2, Logo, Planet, planet } from '../../../assets'
 import Axios from 'axios'
 import url from '../../routes/url'
-import { BottomSheet, ButtonAbsen, Header,} from '../../components'
+import { BottomSheet, ButtonAbsen, Header, Midtrans,} from '../../components'
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
@@ -45,14 +45,18 @@ const Home = () => {
         var hari = myDays[tglIND.getDay()]
         try {
           await Axios.get(url+'golkar/api.php?op=mkSekarang&hari='+hari+'&kelas='+user.kelas)
-              .then((res) => {                  
-                const hasil = res.data.data.hasil
-                console.log(hasil)                                 
-                setMkNow(res.data.data.hasil)
+              .then((res) => {            
+                const namaMk = res.data
+                if (namaMk == '') {
+                  setMkNow('Tidak Ada Perkuliahan')
+                } else {
+                  console.log(namaMk)
+                  setMkNow(namaMk.data.hasil.mksekarang)
+                }
+                // setMkNow(a.mksekarang)
               })
         } catch (e) {
-            setMkNow('Tidak Ada Perkuliahan')
-            console.log('tidak ada perkuliahan', e)
+            console.log('tidak ada perkuliahana', e)
         }
       }
     } catch(e) {
@@ -73,20 +77,21 @@ const Home = () => {
 
   return (    
     <View style={{ flex: 1 }}>      
-        <ImageBackground source={ Bg} resizeMode="cover" style={styles.image}>
-        <Header nama={username} onPress={() => LogOut()} />
-            <ButtonAbsen  />
-            <View style={styles.contWarn}>
-              <Text style={styles.warning}>Silahkan Tekan Tombol di Atas Untuk Melakukan Absensi</Text>
-            </View>                
-            <View style={styles.contMkNow}>
-              <LinearGradient style={styles.contNow} colors={['#f83600', '#fe8c00',]}>
-                <Text style={styles.now}>Sekarang</Text>
-              </LinearGradient>
-                <Text style={styles.mkNow}>{mkNow}</Text>
-            </View>
-            <BottomSheet kelasMhs={ kelas }/>
-        </ImageBackground>      
+      <StatusBar  barStyle="light-content" backgroundColor={'#323d78'} />
+        <View resizeMode="cover" style={styles.image}>
+          <Header nama={username} onPress={() => LogOut()} />
+          <ButtonAbsen  />                         
+          <View style={styles.contMkNow}>
+            <LinearGradient style={styles.contNow} colors={['#f83600', '#fe8c00',]}>
+              <Text style={styles.now}>Sekarang</Text>
+            </LinearGradient>
+              <Text style={styles.mkNow}>{mkNow}</Text>
+          </View>
+          <View style={styles.contMkNow}>
+            <Text style={{ color: 'white', fontFamily: 'BebasNeue-Regular', fontSize: 20 }}>Poltek PGRI Banten</Text>
+          </View>
+          <BottomSheet kelasMhs={ kelas }/>
+        </View>      
     </View>
   )
 }
@@ -95,6 +100,7 @@ export default Home
 const styles = StyleSheet.create({
   image: {
     flex: 1,
+    backgroundColor: '#323d78'
   },
   
   contMkNow: {
@@ -107,14 +113,7 @@ const styles = StyleSheet.create({
     fontFamily: 'BebasNeue-Regular',
     letterSpacing: 2,
   },
-  contWarn: {
-    alignSelf: 'center',
-    marginVertical: 30
-  },
-  warning: {
-    fontSize: 13,
-    color: 'white',    
-  },
+  
   now: {
     color: 'white',
     fontFamily: 'BebasNeue-Regular',

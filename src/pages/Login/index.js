@@ -2,61 +2,53 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import url from '../../routes/url';
 import { StyleSheet, StatusBar, useWindowDimensions, View, Modal, Image, ScrollView, Alert, TextInput, Text} from 'react-native';
-import { Logo } from '../../../assets'
+import { Logo, Error2, Success } from '../../../assets'
 import {CustomButton, AlertView} from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
-import { Error2 } from '../../../assets'
 const Login = ({ navigation }) => {
     const [nim, setNim] = useState('');
     const [username, setUsername] = useState('');
-    const [alertLottie,  setAlertLottie] = useState(false);
+    const [alertLottie, setAlertLottie] = useState(false);
+    const [iconAlert, setIconAlert] = useState('');
+    const [titleAlert, setTitileAlert] = useState('');
+    const [messageAlert, setMessageAlert] = useState('');
+    const [btnColor, setBtnColor] = useState('');
     const { height } = useWindowDimensions();
-    const onSignIn = async () => {         
+
+    const onSignIn = async () => {
         // post data
-        await Axios.get(url+'golkar/api.php?op=mhsLogin&nim='+nim+'&username='+username)            
-        .then((json) => {
-            const mahasiswa = json.data.data
-            console.log(mahasiswa.namamahasiswa)
-            if (json.data.data == false || json.data.data == null){
-                setAlertLottie(true)
-            } else {
-                let data = {
-                    username: mahasiswa.namamahasiswa,
-                    nim: mahasiswa.nim,
-                    idkelas: mahasiswa.idkelas,
-                    kelas: mahasiswa.kelas,
-                    keterangan: mahasiswa.keterangan,
-                    idjurusan: mahasiswa.idjurusan,
-                    jurusan: mahasiswa.jurusan,
-                }                                
-                try {
-                    AsyncStorage.setItem('dataStorage', JSON.stringify(data))
-                    navigation.replace('Home')
-                } catch (e) {
-                    console.log('Kirim err ' + e);                    
+        await Axios.get(url + 'golkar/api.php?op=mhsLogin&nim=' + nim + '&username=' + username)
+            .then((json) => {
+                const mahasiswa = json.data.data
+                console.log(mahasiswa.namamahasiswa)
+                if (json.data.data == false || json.data.data == null) {
+                    setTitileAlert("Error")
+                    setMessageAlert("Username atau Nim anda tida sesuai!")
+                    setIconAlert(Error2)
+                    setBtnColor('#cf4c4c')
+                    setAlertLottie(true)
+                } else {
+                    console.log('Bisa Login');
+                    let data = {
+                        username: mahasiswa.namamahasiswa,
+                        nim: mahasiswa.nim,
+                        idkelas: mahasiswa.idkelas,
+                        kelas: mahasiswa.kelas,
+                        keterangan: mahasiswa.keterangan,
+                        idjurusan: mahasiswa.idjurusan,
+                        jurusan: mahasiswa.jurusan,
+                    }                                
+                    try {
+                        AsyncStorage.setItem('dataStorage', JSON.stringify(data))
+                        navigation.replace('Home')
+                    } catch (e) {
+                        console.log('Kirim err ' + e);                    
+                    }
                 }
-            }
-        })      
+            })
     }
-    useEffect(()  => {
-        cekLogin()
-    }, [])
-    const cekLogin = async () => {
-        try {
-            const DataStorage = await AsyncStorage.getItem('dataStorage')
-            if (DataStorage) {
-                console.log(DataStorage)
-                navigation.replace('Home')
-            } else {
-                // navigation.replace('Login')                            
-                console.log('Tidak ada data storage')
-            }
-        }catch (e){
-            console.log('Gagal login otomats')
-            navigation.replace('Login')            
-        }
-    }
+    
     return (
         <LinearGradient
             colors={[ '#8000FF', '#00FFFF', ]}        
@@ -66,7 +58,7 @@ const Login = ({ navigation }) => {
             <StatusBar hidden={true} />
             <View style={styles.root}>
                 <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' />
-                <AlertView jsonPath={Error2} btnCollor="#cf4c4c" title="Error" message="NIM atau Username Tidak Sesuai" visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)}></AlertView>
+                <AlertView jsonPath={iconAlert} btnCollor={btnColor} title={titleAlert} message={messageAlert} visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)}></AlertView>
 
                 <TextInput style={styles.txtInput} placeholder="Masukan Username Anda" onChangeText={(value) => setUsername(value)} value={username} />
                 <TextInput style={styles.txtInput} placeholder="Masukan NIM Anda" onChangeText={(value) => setNim(value)} value={nim}/>

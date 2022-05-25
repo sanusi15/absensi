@@ -4,7 +4,8 @@ import Axios from 'axios';
 import url from '../../routes/url'
 import SwipeUpDown from 'react-native-swipe-up-down';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {SwipeUp, SwipeDown} from '../../../assets'
+import {SwipeUp, SwipeDown, SwipeUp2} from '../../../assets'
+import LottieView from 'lottie-react-native'
 
 
 const BottomSheet = () => {    
@@ -24,8 +25,16 @@ const BottomSheet = () => {
                 var myDays = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
                 var hari = myDays[tglIND.getDay()]                
                 try {
-                    await Axios.get(url + 'golkar/api.php?op=jadwalMk&hari='+hari+'&kelas=' + user.kelas)
-                        .then((response) => setJadwal(response.data.data.hasil))
+                    await Axios.get(url + 'golkar/api.php?op=jadwalMk&hari='+hari+'&kelas='+user.kelas)
+                        .then((response) => {
+                            // setJadwal(response.data.data.hasil)
+                            if (response.data.data.hasil.status == 'Ada MK') {
+                                setJadwal(response.data.data.hasil.data)                                
+                            } else {
+                                setJadwal(response.data.data)                                
+                                
+                            }
+                        })
                 } catch (e) {
                     console.log('Gagaal get API')
                 }
@@ -37,16 +46,20 @@ const BottomSheet = () => {
     const ItemMini = () => {
         return (
             <View style={styles.mini}>
-                <Image source={SwipeUp} style={{}} />
+                {/* <Image source={SwipeUp} style={{}} /> */}
+                
+                <LottieView style={{ width:100, height: 80, left: -10, top:-7 }}  source={SwipeUp2} autoPlay loop />
                 <Text style={styles.lihatJadwal}>Jadwal Mata Kuliah</Text>
-                <Image source={SwipeUp} style={{}} />
+                <LottieView style={{ width:100, height: 80, right:-25, top:-7 }}  source={SwipeUp2} autoPlay loop />
+                
+                {/* <Image source={SwipeUp} style={{}} /> */}
             </View>   
         )
     }
     const ItemFull = ({ value }) => (
         <View>
             <Image source={SwipeDown} style={{ alignSelf: 'center' }} />
-            {
+            {                
                 value.length > 0 ? (
                     value.map((val, i) => (
                         <View style={styles.full} key={i}>
@@ -60,9 +73,8 @@ const BottomSheet = () => {
                         </View>
                     ))
                 ): (
-                    <View style={{ flex: 1, }}>
-                        <Text style={{ color: 'white', marginLeft: 10, marginTop: 20, marginBottom: 30 }}>Mohon Tunggu Sebentar...</Text>
-                        <ActivityIndicator size="large" loading={true} color="#00c6ff" />
+                    <View style={styles.full}>
+                        <Text style={{ color: 'white', alignSelf: 'center', marginTop: 20, marginBottom: 30, fontFamily: 'Akaya' }}>Tidak Ada Jadwal Perkuliahan</Text>
                     </View>        
                 )
             }
@@ -70,7 +82,6 @@ const BottomSheet = () => {
     )
 
     return (
-      
         <View style={styles.container}>
             <SwipeUpDown
                 itemMini={(hide) => <ItemMini show={hide} />}
@@ -113,7 +124,7 @@ const styles = StyleSheet.create({
     lihatJadwal: {
         fontFamily: 'BebasNeue-Regular',
         color: '#fff',
-        fontSize: 20
+        fontSize: 20,
     },
     full: {
         flexDirection: 'row',

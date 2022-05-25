@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native'
 import React, {useState} from 'react'
 import LottieView from 'lottie-react-native'
-import { Loading, Error2, Wrong, Success } from '../../../assets'
-import LinearGradient from 'react-native-linear-gradient';
 
 const AlertView = ({ title, message, btnCollor, jsonPath, visible, setVisibleAlert }) => {
     // const [ visibleAlert, setVisibleAlert ] = useState(visible)
