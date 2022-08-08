@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import url from '../../routes/url';
-import { StyleSheet, StatusBar, useWindowDimensions, View, Modal, Image, ScrollView, Alert, TextInput, Text} from 'react-native';
-import { Logo, Error2, Success } from '../../../assets'
+import { StyleSheet, StatusBar, useWindowDimensions, View, Image, ScrollView, TextInput} from 'react-native';
+import { Logo, Error2 } from '../../../assets'
 import {CustomButton, AlertView} from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+
 const Login = ({ navigation }) => {
     const [nim, setNim] = useState('');
     const [username, setUsername] = useState('');
@@ -18,10 +19,9 @@ const Login = ({ navigation }) => {
 
     const onSignIn = async () => {
         // post data
-        await Axios.get(url + 'golkar/api.php?op=mhsLogin&nim=' + nim + '&username=' + username)
+        await Axios.get(url + 'api.php?op=mhsLogin&nim=' + nim + '&username=' + username)
             .then((json) => {
                 const mahasiswa = json.data.data
-                console.log(mahasiswa.namamahasiswa)
                 if (json.data.data == false || json.data.data == null) {
                     setTitileAlert("Error")
                     setMessageAlert("Username atau Nim anda tida sesuai!")
@@ -35,13 +35,12 @@ const Login = ({ navigation }) => {
                         nim: mahasiswa.nim,
                         idkelas: mahasiswa.idkelas,
                         kelas: mahasiswa.kelas,
-                        keterangan: mahasiswa.keterangan,
-                        idjurusan: mahasiswa.idjurusan,
-                        jurusan: mahasiswa.jurusan,
+                        jeniskelamin: mahasiswa.jeniskelamin,
+                        namaprodi: mahasiswa.namaprodi,
                     }                                
                     try {
                         AsyncStorage.setItem('dataStorage', JSON.stringify(data))
-                        navigation.replace('Home')
+                        navigation.replace('MainApp')
                     } catch (e) {
                         console.log('Kirim err ' + e);                    
                     }
@@ -51,22 +50,18 @@ const Login = ({ navigation }) => {
     
     return (
         <LinearGradient
-            colors={[ '#8000FF', '#00FFFF', ]}        
+            colors={['#2B32B2', '#1488CC', ]}        
             style={styles.grediant}
         >
         <ScrollView showsVerticalScrollIndicator={false}>
             <StatusBar hidden={true} />
             <View style={styles.root}>
                 <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' />
-                <AlertView jsonPath={iconAlert} btnCollor={btnColor} title={titleAlert} message={messageAlert} visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)}></AlertView>
-
+                <AlertView jsonPath={iconAlert} btnCollor={btnColor} title={titleAlert} message={messageAlert} visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)} klik={() => setAlertLottie(false)}></AlertView>
                 <TextInput style={styles.txtInput} placeholder="Masukan Username Anda" onChangeText={(value) => setUsername(value)} value={username} />
-                <TextInput style={styles.txtInput} placeholder="Masukan NIM Anda" onChangeText={(value) => setNim(value)} value={nim}/>
-
+                <TextInput style={styles.txtInput} placeholder="Masukan Password Anda" onChangeText={(value) => setNim(value)} value={nim}/>
                 <CustomButton text="Sign In" onPress={onSignIn} />
-                <CustomButton text="Silahkan Masukan NIM dan Password Anda" type="TERTIARY" />
-                
-
+                <CustomButton text="Silahkan Masukan Username dan Password Anda" type="TERTIARY" />
             </View>    
         </ScrollView>   
         </LinearGradient>

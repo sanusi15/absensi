@@ -22,6 +22,11 @@ target 'Absensi' do
 
   pod 'lottie-react-native', :path => '../node_modules/lottie-react-native'
 
+
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
+
   target 'AbsensiTests' do
     inherit! :complete
     # Pods for testing

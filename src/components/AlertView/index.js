@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Modal, TouchableOpacity } from 'react-native'
 import React, {useState} from 'react'
 import LottieView from 'lottie-react-native'
 
-const AlertView = ({ title, message, btnCollor, jsonPath, visible, setVisibleAlert }) => {
-    // const [ visibleAlert, setVisibleAlert ] = useState(visible)
+const AlertView = ({ title, message, btnCollor, jsonPath, visible, klik }) => {
+
     return (
         <View style={styles.centeredView}>
             <Modal transparent={true} animationType="slide" visible={visible}>
@@ -15,7 +15,7 @@ const AlertView = ({ title, message, btnCollor, jsonPath, visible, setVisibleAle
                             <LottieView  source={jsonPath} autoPlay loop />
                         </View>
                         <Text style={styles.textStyle}>{message}</Text>                        
-                        <TouchableOpacity style={{ ...styles.openButton, backgroundColor: btnCollor }} onPress={() => setVisibleAlert()}>
+                        <TouchableOpacity style={{ ...styles.openButton, backgroundColor: btnCollor }} onPress={() => klik()}>
                             <Text style={styles.okStyle}>Ok</Text>
                         </TouchableOpacity>
                     </View>

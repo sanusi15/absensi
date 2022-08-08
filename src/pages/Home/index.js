@@ -50,7 +50,6 @@ const Home = () => {
                 if (namaMk == '') {
                   setMkNow('Tidak Ada Perkuliahan')
                 } else {
-                  console.log(namaMk)
                   setMkNow(namaMk.data.hasil.mksekarang)
                 }
                 // setMkNow(a.mksekarang)
@@ -63,23 +62,14 @@ const Home = () => {
       console.log('Value 0 :as '+ e)
     }
   }
-  const LogOut = async () => {
-    try {
-        const value = await AsyncStorage.removeItem('dataStorage')
-        if (value == null) {
-          navigation.replace('Login')            
-        }
-    } catch (e) {
-      console.log('gagal logout')
-    }
-  }
+  
 
 
   return (    
     <View style={{ flex: 1 }}>      
-      <StatusBar  barStyle="light-content" backgroundColor={'#323d78'} />
+        <StatusBar  barStyle="light-content" backgroundColor={'#323d78'} />
         <View resizeMode="cover" style={styles.image}>
-          <Header nama={username} onPress={() => LogOut()} />
+          <Header nama={username} />
           <ButtonAbsen  />                         
           <View style={styles.contMkNow}>
             <LinearGradient style={styles.contNow} colors={['#f83600', '#fe8c00',]}>

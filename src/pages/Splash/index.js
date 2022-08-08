@@ -16,20 +16,20 @@ const Splash = ({navigation}) => {
             const DataStorage = await AsyncStorage.getItem('dataStorage')
             if (DataStorage) {
                 console.log(DataStorage)
-                navigation.replace('Home')
+                navigation.replace('MainApp')
             } else {
                 navigation.replace('Login')                            
                 console.log('Tidak ada data storage')
             }
         }catch (e){
             console.log('Gagal login otomats')
-            navigation.replace('Login')            
+            navigation.replace('Login')
         }
     }
   
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <StatusBar hidden={true} />
+      <StatusBar hidden={false} backgroundColor="#ebebeb" />
       <Image source={Logo} style={{ width: 300, height:320 }} />          
     </View>
   )

@@ -2,6 +2,8 @@
   package="com.absensi">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- qrcode -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
       android:name=".MainApplication"
