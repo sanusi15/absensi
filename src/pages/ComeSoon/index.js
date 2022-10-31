@@ -7,7 +7,7 @@ const ComeSoon = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#fff" />
-        <LottieView source={Comingsoon2} autoPlay loop />      
+        <LottieView source={Comingsoon2} autoPlay={true} loop={true} />      
     </View>
   )
 }

@@ -73,7 +73,7 @@ const JadwalMk = () => {
                 start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }}
                 style={styles.cardJadwal}>
                 <ListJadwal jadwal={jadwal} />
-            </LinearGradient>
+            </LinearGradient>            
         </View>
     )
 }
@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
     cardJadwal: {
         marginTop: 10,
         width: '100%',
-        minHeight: 260,
+        // minHeight: 260,
+        
         borderRadius: 10,
         marginBottom: 10,
         padding: 20,

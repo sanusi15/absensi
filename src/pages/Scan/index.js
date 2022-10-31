@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Axios from 'axios'
 import url from '../../routes/url'
 import { RNCamera } from 'react-native-camera';
-import { LogoDark, Scanqr2, Success, Error2, Warning } from '../../../assets'
+import { Scanqr3, Scanqr2, Success, Error2, Warning } from '../../../assets'
 import LottieView from 'lottie-react-native'
 import { AlertView } from '../../components';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -120,8 +120,7 @@ const Scan = () => {
         setMessageAlert('Mohon maaf anda belum melakukan pembayaran registrasi tingkat')
         setBtnColor('#fa5050')
         setIconAlert(Error2)
-        setAlertLottie(true)
-        
+        setAlertLottie(true)        
       } else {
         // post data absen ke database
         var jmlhpertemuan = parseInt(pertemuanMk) + 1
@@ -203,11 +202,17 @@ const Scan = () => {
         markerStyle={styles.markerStyle}
         onRead={onSuccess}
         flashMode={RNCamera.Constants.FlashMode.off}
+        vibrate={true}
+        customMarker={
+          <View style={{ width: '80%', height: '100%', justifyContent: 'center' }}>
+            <LottieView source={Scanqr3} autoPlay loop  speed={0.5} />
+          </View>
+        }
         style={styles.container}
         topContent={
           <View style={styles.centerText}>
             <View style={{ backgroundColor: '#1488CC', marginTop: -60 }} >
-              <LottieView source={Scanqr2} autoPlay loop style={{ width: 80, height: 150, justifyContent: 'center' }} />
+              <LottieView source={Scanqr2} autoPlay loop style={{ width: 80, height: 150, justifyContent: 'center' }} speed={0.5} />
             </View>
             <TouchableOpacity style={styles.close} onPress={() => navigation.goBack()}>
               <Icon name='arrow-forward-ios' size={20} color='#1488CC' />
@@ -219,9 +224,10 @@ const Scan = () => {
         }
         bottomContent={        
           <TouchableOpacity style={styles.buttonTouchable} >
-            <Image source={LogoDark} style={styles.buttonImage} />
+            
           </TouchableOpacity>
         }
+
       />
     );
   }
@@ -300,5 +306,6 @@ const styles = StyleSheet.create({
     // backgroundColor: '#aeae',
     width: '100%',
     height: '90%',
-  }
+  },
+  
 });

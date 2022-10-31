@@ -3,7 +3,6 @@ import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Home, Login, History, Scan, User, Splash, ComeSoon } from '../pages'
-import {Bg} from '../../assets'
 import Icon from 'react-native-vector-icons/Octicons'
 
 const Stack = createNativeStackNavigator();
@@ -44,7 +43,7 @@ const MainApp = () => {
                 tabBarStyle: {
                     backgroundColor: '#fff',
                     position: 'absolute',
-                    bottom: 25,
+                    bottom: 10,
                     left: 20,
                     right: 20,
                     elevation: 0,
@@ -56,9 +55,9 @@ const MainApp = () => {
 
             })}
         >
-            <Tab.Screen name="History" component={History} options={{ headerShown: false, }} />
+            <Tab.Screen name="History" component={History} options={{ headerShown: false, }}  />
             <Tab.Screen name="Home" component={Home} options={{ headerShown: false, }} />
-            <Tab.Screen name="User" component={User} options={{ headerShown: false}} />
+            <Tab.Screen name="User" component={User} options={{ headerShown: false }} Color={'#aeae'} />
         </Tab.Navigator>
     )
 }

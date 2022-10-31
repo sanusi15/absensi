@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import url from '../../routes/url';
-import { StyleSheet, StatusBar, useWindowDimensions, View, Image, ScrollView, TextInput} from 'react-native';
+import { StyleSheet, StatusBar, useWindowDimensions, View, Image, ScrollView, TextInput, Text, TouchableOpacity, Linking} from 'react-native';
 import { Logo, Error2 } from '../../../assets'
 import {CustomButton, AlertView} from '../../components'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,7 +11,7 @@ const Login = ({ navigation }) => {
     const [nim, setNim] = useState('');
     const [username, setUsername] = useState('');
     const [alertLottie, setAlertLottie] = useState(false);
-    const [iconAlert, setIconAlert] = useState('');
+    const [iconAlert, setIconAlert] = useState(''); 
     const [titleAlert, setTitileAlert] = useState('');
     const [messageAlert, setMessageAlert] = useState('');
     const [btnColor, setBtnColor] = useState('');
@@ -37,6 +37,7 @@ const Login = ({ navigation }) => {
                         kelas: mahasiswa.kelas,
                         jeniskelamin: mahasiswa.jeniskelamin,
                         namaprodi: mahasiswa.namaprodi,
+                        foto: mahasiswa.foto,
                     }                                
                     try {
                         AsyncStorage.setItem('dataStorage', JSON.stringify(data))
@@ -47,23 +48,34 @@ const Login = ({ navigation }) => {
                 }
             })
     }
+
+    const goToInstagram = () => {
+        Linking.openURL('https://www.instagram.com/skuy.code/');
+    }
     
     return (
         <LinearGradient
             colors={['#2B32B2', '#1488CC', ]}        
             style={styles.grediant}
         >
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <StatusBar hidden={true} />
-            <View style={styles.root}>
-                <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' />
-                <AlertView jsonPath={iconAlert} btnCollor={btnColor} title={titleAlert} message={messageAlert} visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)} klik={() => setAlertLottie(false)}></AlertView>
-                <TextInput style={styles.txtInput} placeholder="Masukan Username Anda" onChangeText={(value) => setUsername(value)} value={username} />
-                <TextInput style={styles.txtInput} placeholder="Masukan Password Anda" onChangeText={(value) => setNim(value)} value={nim}/>
-                <CustomButton text="Sign In" onPress={onSignIn} />
-                <CustomButton text="Silahkan Masukan Username dan Password Anda" type="TERTIARY" />
-            </View>    
-        </ScrollView>   
+            <StatusBar hidden={false} />
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.root}>
+                    <Image source={Logo} style={[styles.logo, {height: height * 0.3}]} resizeMode='contain' />
+                    <AlertView jsonPath={iconAlert} btnCollor={btnColor} title={titleAlert} message={messageAlert} visible={alertLottie} setVisibleAlert={() => setAlertLottie(false)} klik={() => setAlertLottie(false)}></AlertView>
+                    <TextInput style={styles.txtInput} placeholder="Masukan Username Anda" onChangeText={(value) => setUsername(value)} value={username} />
+                    <TextInput style={styles.txtInput} placeholder="Masukan Password Anda" onChangeText={(value) => setNim(value)} value={nim}/>
+                    <CustomButton text="Sign In" onPress={onSignIn} />
+                    <CustomButton text="Silahkan Masukan Username dan Password Anda" type="TERTIARY" />
+                </View>    
+                    
+            </ScrollView>   
+            <TouchableOpacity onPress={() => goToInstagram() } style={styles.footer}>
+                <Text style={styles.footerText}>Skuy.code</Text>
+                <Text style={styles.footerText2}>Copyright © 2022</Text>                    
+                <Text style={styles.footerText2}>Version 1.0.0</Text>
+
+            </TouchableOpacity>
         </LinearGradient>
     );
 };
@@ -142,6 +154,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     grediant: {
-        flex:1
+        flex: 1,       
+    },
+    footer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 0,
+    },
+    footerText: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 'bold'        
+    },
+    footerText2: {
+        color: '#fff',
+        fontSize: 12,
     }
+    
 });

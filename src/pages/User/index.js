@@ -1,20 +1,35 @@
-import { StyleSheet, View, Text, TouchableOpacity, Image, StatusBar, ImageBackground } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Image, Modal, ImageBackground, Pressable, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Boy, Girl, Bg } from '../../../assets';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Icon2 from 'react-native-vector-icons/Feather'
+import { launchImageLibrary } from 'react-native-image-picker';
+import Axios from 'axios';
+import url from '../../routes/url';
 
-const User = ({ navigation }) => {
+const User = ({ navigation, }) => {
     // const navigation = useNavigation();
     const [user, setUser] = useState('')
+    const [imageUri, setImageUri] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const getData = async () => {
         try {
             const value = await AsyncStorage.getItem('dataStorage')
             if (value !== null) {
-                const user = JSON.parse(value)
-                setUser(user)
+                // We have data!!
+                // console.log(value);
+                var data = JSON.parse(value);
+                setUser(data);
+            }
+
+            try {
+                const img = await Axios.get(url + 'api.php?op=getImg&nim=' + data.nim)
+                var src = img.data.hasil
+                setImageUri(src)
+            }catch(err){
+                console.log(err)
             }
         }catch(err){
             console.log('User page tidak dapat datastorage')
@@ -29,27 +44,122 @@ const User = ({ navigation }) => {
             }
         } catch (e) {
             console.log('gagasl logout')
-        }
-        
+        }        
+    }    
+
+    const UploadImage = async ({source}) => {
+        // console.log('Upload Image = ', source)
+        const data = new FormData()
+        data.append('photo', {            
+            name: source.fileName,
+            type: source.type,
+            uri: Platform.OS === "ios" ? source.uri.replace("file://", "") : source.uri 
+        })
+        await fetch(url + 'api.php?op=uploadImg&nim='+user.nim, {
+        // await fetch('http://192.168.1.14:8080/tes/api.php', {
+            method: 'POST',
+            body: data,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                console.log('Upload Imazgse = ', json)
+            }
+        )
     }
+
+    const openGallery = () => {
+        const options = {
+            mediaType: 'photo',
+            quality: 1,
+            storageOptions: {
+                mediaType: 'photo',
+                skipBackup: true,
+                path: 'images',
+                saveToPhotos: true,
+                waitUntilSaved: true,
+                cameraRoll: true,
+            },
+            includeBase64: false,
+        }
+        launchImageLibrary(options, res => {
+            if (res.didCancel) {
+                console.log('User cancelled saage picker');
+            } else if (res.error) {
+                console.log('ImagePicker Error: ', res.error);
+            }
+            else if (res.customButton) {
+                console.log('User tapped custom butston: ', res.customButton);
+            } else {
+                const source = res.assets[0];     
+                // console.log(source)
+                setImageUri(source.uri)
+                UploadImage({ source })
+            }
+        })
+    }
+
+    const ImageProfile = () => {        
+        if (imageUri != null) {
+            return (
+                <Image source={{ uri: 'https://smart.politeknikpgribanten.ac.id/assets/img/' + imageUri }} style={styles.profileImg} />
+            )
+        } else {
+            if (user.jeniskelamin === 'Perempuan') {
+                return (
+                    <Image source={Girl} style={styles.profileImg} />
+                    )
+            } else {
+                return (
+                    <Image source={Boy} style={styles.profileImg} />
+                )
+                
+            }
+        }
+    }
+
 
     useEffect(() => {
         getData()
     }, [])
-2
+
     return (
-        <View style={styles.containerUser}>
+        <View style={styles.containerUser}>           
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {                    
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={styles.seeImg}>
+                            <Image source={{ uri: 'https://smart.politeknikpgribanten.ac.id/assets/img/' + imageUri }} style={styles.detailImg} />                            
+                        </View>
+                    </View>
+                    <Pressable
+                        style={[styles.button, styles.buttonClose]}
+                        onPress={() => setModalVisible(!modalVisible)}
+                    >
+                        <Text style={styles.textStyle}>Kembali</Text>
+                    </Pressable>
+                </View>
+            </Modal>
             <View style={styles.header}>
                 <ImageBackground source={Bg} style={styles.bg} imageStyle={styles.imgBg}>
-                    <View style={styles.cardImg}>
-                        {
-                            user.jeniskelamin === 'Laki-Laki' ? (<Image source={Boy} style={styles.profileImg} />) : (<Image source={Girl} style={styles.profileImg} />)
-                        }
-                        
-                        <TouchableOpacity style={styles.cardIcon} onPress={() => navigation.navigate('ComeSoon')} >
+                    <TouchableOpacity
+                        style={styles.cardImg}
+                        onPress={() => setModalVisible(!modalVisible)}
+                    >                                              
+                        <ImageProfile />
+                        <TouchableOpacity style={styles.cardIcon} onPress={() => openGallery() } >
                             <Icon name='camera' size={15} color='#fff' />
                         </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </ImageBackground>
             </View>
             <View style={styles.body}>
@@ -80,12 +190,10 @@ const User = ({ navigation }) => {
                     <View style={{ marginVertical: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Text style={styles.textQ}>Jurusan</Text>
                         <Text style={styles.textBio}>{user.namaprodi}</Text>
-                    </View>    
+                    </View>                        
                 </View>
-
             </View>
         </View>
-        
     )
 }
 
@@ -103,23 +211,33 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#000',
-
     },
     imgBg: {
         height: '100%',
     },
     cardImg: {
-        width: 100,
-        height: 100,
+        width: 90,
+        height: 90,
         borderRadius: 50,
         borderWidth: 2,
         alignItems: 'center',
         justifyContent: 'center',
         borderColor: '#fff',
     },
+    seeImg: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5
+    },
+    detailImg: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 5,
+        marginBottom: 20,
+    },
     profileImg: {
-        width: 80,
-        height: 80,
+        width: 85,
+        height: 85,
         borderRadius: 40,
     },
     cardIcon: {
@@ -202,6 +320,51 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'Quicksand-Bold',
         color: '#000',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22
+    },
+    modalView: {
+        margin: 10,
+        height: '50%',
+        width: '80%',
+        backgroundColor: "white",
+        borderRadius: 5,
+        padding: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderRadius: 5,
+        padding: 10,
+        elevation: 2,
+        martginTop: 10,
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
     }
+
 
 })

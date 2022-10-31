@@ -65,7 +65,6 @@ const History = () => {
     await Axios.get(url + 'api.php?op=getKehadiran&nim=' + nim + '&idjadwal=' + id)
       .then((response) => {
         const res = response.data;
-        console.log(res);
         setDftrHadir(res);
       })
 
@@ -197,12 +196,8 @@ const History = () => {
                     </View>
                   </View>
               )
-
-            }
-           
-            
+            }            
           </View>
-
         </View>
       </View>
     </ScrollView>
@@ -252,7 +247,7 @@ const styles = StyleSheet.create({
   dftrAbsenTxtLbl: {
     fontSize: 12,
     fontFamily: 'Quicksand-Bold',
-    color: '#aeaeae',
+    color: '#5e5d59',
   },
   cardDftrAbsenNol: {
     backgroundColor: '#fff',
@@ -264,7 +259,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   historyContent: {
     flex: 1,  
     backgroundColor: '#ebebeb',

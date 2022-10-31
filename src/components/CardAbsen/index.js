@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions  } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import LottieView from 'lottie-react-native'
-import { Click, Waiting, DoneAbsen } from '../../../assets';
+import { Click, Waiting, DoneAbsen,} from '../../../assets';
 import Axios from 'axios'
 import url from '../../routes/url'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,7 +45,7 @@ const CardAbsen = ({ mkNow, dosen }) => {
         }
     }
 
-    useEffect(() => {
+    useEffect(() => {      
         cekSudahAbsen()       
     }, [])
 
@@ -79,13 +79,13 @@ const CardAbsen = ({ mkNow, dosen }) => {
                             ) : (
                                 <>
                                     <Text style={{ fontFamily: 'Quicksand-Bold', fontSize: 18, color: '#000', }} >Absen Disini</Text>
-                                    <TouchableOpacity style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#ddd', marginVertical: 40 }} onPress={() => navigation.navigate('Scan', {data : 'tes'})} >
-                                        <LottieView source={Click} autoPlay loop />
+                                    <TouchableOpacity style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#ddd', marginVertical: 20 }} onPress={() => navigation.navigate('Scan', {data : 'tes'})} >
+                                        <LottieView source={Click} autoPlay loop speed={1} />
                                     </TouchableOpacity>
                                 </>
                             )
                         }
-                        <Text style={{ fontFamily: 'Quicksand-Bold', fontSize: 15, color: '#000' }}>{dosen} | {mkNow}</Text>
+                        <Text style={{ fontFamily: 'Quicksand-Bold', fontSize: 15, color: '#000' }}>{dosen} || {mkNow}</Text>
                     </View>
                 </View>
             </View>
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 10,
-        
     },
 
 

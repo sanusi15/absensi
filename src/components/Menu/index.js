@@ -10,7 +10,7 @@ const Menu = () => {
     const navigation = useNavigation();
 
     const goComing = () => {
-       navigation.navigate('ComeSoon');
+        navigation.navigate('ComeSoon');
     }
 
     return (
@@ -20,19 +20,19 @@ const Menu = () => {
                     <View style={styles.cardMenu}>
                         <Icon name="document-text-outline" size={30} color="#2B32B2" />
                     </View>
-                    <Text style={styles.menuItemText}>Cetak KHS</Text>
+                    <Text style={styles.menuItemText}>KHS</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goComing()}  style={styles.menuItem}>
                     <View style={styles.cardMenu}>
                         <Icon name="document-text-outline" size={30} color="#2B32B2" />
                     </View>
-                    <Text style={styles.menuItemText}>Cetak KRS</Text>
+                    <Text style={styles.menuItemText}>KRS</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => goComing()}  style={styles.menuItem}>
                     <View style={styles.cardMenu}>
                         <Icon name="md-document-attach-outline" size={30} color="#2B32B2" />
                     </View>
-                    <Text style={styles.menuItemText}>Rangkuman</Text>
+                    <Text style={styles.menuItemText}>Nilai</Text>                    
                 </TouchableOpacity>    
                 <TouchableOpacity onPress={() => goComing()}  style={styles.menuItem}>
                     <View style={styles.cardMenu}>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         height: '10%',
         padding: 0,
         marginTop: 10,
-        // backgroundColor: '#1488CC',
+        // backgroundColor: '#aeae',
     },
     menuItem: {
         height: 60,
@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        // maxHeight: 80,
+    },
+    contText: {
+        height: 40,
     },
     menuItemText: {
         marginTop: 5,

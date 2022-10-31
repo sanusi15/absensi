@@ -1,30 +1,50 @@
 import { StyleSheet, Text, View, Image, Dimensions } from 'react-native'
-import React from 'react'
-import { Boy, Girl } from '../../../assets/Image/index'
+import React, { useEffect } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
+import { Boy, Girl } from '../../../assets'
 
+const CardProfile = ({ data, imageUri }) => {    
 
+    const ImgProfile = () => {
+        if (imageUri != null) {
+            return (
+                <Image source={{ uri: 'https://smart.politeknikpgribanten.ac.id/assets/img/'+imageUri }} style={styles.imgProfile} />
+            )
+        } else {
+            if (data.jeniskelamin == 'Perempuan') {
+                return (
+                    <Image source={Girl} style={styles.imgProfile} />
+                )
+            } else {
+                return (
+                    <Image source={Boy} style={styles.imgProfile} />
+                )                
+            }
+        }
+    }
 
-const CardProfile = ({nama, kelas, jk}) => {
+    useEffect(() => {
+        console.log(imageUri)
+    })
+
     return (
         <View style={styles.profileContainer}>            
             <LinearGradient
+                // colors={['#666eff', '#1488CC']}
                 colors={['#2B32B2', '#1488CC']}
-                // colors={['#3f2b96', '#a8c0ff']}
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                 style={styles.card}>
                 <View style={styles.biodata}>
-                    <Text style={styles.nama}>{nama}</Text>
-                    <Text style={styles.nim}>{kelas}</Text>
+                    <Text style={styles.nama}>{data.username}</Text>
+                    <Text style={styles.nim}>{data.kelas}</Text>
                 </View>
                 <View style={styles.img}>
-                    {
-                        jk == 'Perempuan' ? (
-                            <Image source={Girl} style={styles.imgProfile} />
-                            ) : (
-                            <Image source={Boy} style={styles.imgProfile} />
-                        )
-                    }
+                    {/* {
+                        imageUri === '' ? (
+                            <Image source={} style={styles.imgProfile} />
+                        ) : (<Image source={{ uri: imageUri }} style={styles.imgProfile} />)
+                    } */}
+                    <ImgProfile />
                 </View>     
             </LinearGradient>
         </View>
@@ -73,9 +93,9 @@ const styles = StyleSheet.create({
         // backgroundColor: '#ddd',
     },
     imgProfile: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
+        width: 55,
+        height: 55,
+        borderRadius: 25,
     }
 
 
